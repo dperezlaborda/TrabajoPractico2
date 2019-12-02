@@ -6,8 +6,10 @@ const precios = ventaComputadoras.precios
 const sucursales = ventaComputadoras.sucursales;
 const precioMaquina = ventaComputadoras.precioMaquina;
 const cantidadVentasComponente = ventaComputadoras.cantidadVentasComponente;
+const ventasVendedora = ventaComputadoras.ventasVendedora;
 const componenteMasVendido = ventaComputadoras.componenteMasVendido;
 const ventasSucursal = ventaComputadoras.ventasSucursal;
+const mejorVendedora = ventaComputadoras.mejorVendedora;
 const ventaPromedio= ventaComputadoras.ventaPromedio;
 const obtenerIdVenta = ventaComputadoras.obtenerIdVenta;
 const agregarVenta = ventaComputadoras.agregarVenta;
@@ -32,7 +34,7 @@ test('debe devolver cantidad de ventas que se vendio un componente', ()=>{
 
 //3
 test('debe devolver el importe total de ventas de cada vendedora', ()=>{
-    expect(ventasVendedora('Grace')).toBe(1040)
+    expect(ventasVendedora('Grace')).toBe(990)
     expect(ventasVendedora('Ada')).toBe(670)
     expect(ventasVendedora('Hedy')).toBe(460)
 })

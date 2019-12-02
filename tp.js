@@ -85,9 +85,9 @@ console.log(ventasVendedora("Ada"));
 const componenteMasVendido=()=>{
     const componentesVendidos = precios.map( elem => {
         let nombreDelComponente = elem[0]
-            return cantidadVentasComponente(nombreDelComponente)
+            return cantidadVentasComponente(nombreDelComponente);
         });
-    let acc = [0,0]    
+    let acc = [0,0]                                                           //que es acc¿??
     for(let i = 0;  i < componentesVendidos.length; i++){
         if( acc[0] > componentesVendidos[i] ){
             acc = [componentesVendidos[i],i]
@@ -104,34 +104,22 @@ console.log(componenteMasVendido());
  * totales realizadas por una sucursal sin límite de fecha.
 */
 
-const ventasSucursal = (sucursal)=>{
-    const filtrarPorSucursal = ventas.filter(elem =>{    //elem: es una venta del array de todas las ventas
-        elem[5] == sucursal
-    });
-    let listaTotal = filtrarPorSucursal.map(elem=>{
-        precioMaquina(elem[6]);
-    });
-    return listaTotal.reduce((acumulador, elem) =>{
-        acumulador + elem
-    },0);
-}
-
-console.log(ventasSucursal(""));
-
-/*
 const ventasSucursal = (sucursal) => {
     let importeTotal = 0;
     for (let i = 0; i < ventas.length; i++){
         if(ventas[i][5] == sucursal){
-        for (let x = 0; x < ventas.length; x++)
-        for (let y = 0; y < precios.length; y++){
-            if (precios[y][0] == ventas[i][6][x]){
-                importeTotal += precios[y][1]
+            for (let x = 0; x < ventas.length; x++)
+            for (let y = 0; y < precios.length; y++){
+                if (precios[y][0] == ventas[i][6][x]){
+                    importeTotal += precios[y][1]
+                }
             }
-        }
-    }}
-    console.log(importeTotal)
-*/
+        }    
+    }
+    return importeTotal;
+};
+
+console.log(ventasSucursal("Centro"))
 
 /**
  * 6.Devuelve el nombre de la vendedora que más ingresos generó
@@ -140,9 +128,9 @@ const ventasSucursal = (sucursal) => {
 const mejorVendedora=()=>{
     let contador = 0;
     let mejorVendedora = "";
-    for (let vendedora of vendedoras) {
+    for (let vendedora of vendedoras){
         let ingresosGenerados = ventasVendedora(vendedora)
-        if (ingresosGenerados > contador) {
+        if (ingresosGenerados > contador){
             mejorVendedora = vendedora;
             contador = ingresosGenerados;
         }
@@ -184,15 +172,12 @@ const obtenerIdVenta = () => {
  */
 
 const agregarVenta = (dia, mes, anio, vendedora, sucursal, componentes) => {
-   
     if(typeof dia != "number"){   
-            throw "No es un mumero";
-    }
-        
+        throw "No es un mumero";
+    }     
     ventas.push([obtenerIdVenta(), dia, mes, anio, vendedora, sucursal, componentes]);
-    
     return ventas;
-}
+};
 
 module.exports ={
     vendedoras,
@@ -201,8 +186,10 @@ module.exports ={
     sucursales,
     precioMaquina,
     cantidadVentasComponente,
+    ventasVendedora,
     componenteMasVendido,
     ventasSucursal,
+    mejorVendedora,
     ventaPromedio,
     obtenerIdVenta,
     agregarVenta

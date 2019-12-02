@@ -1,159 +1,71 @@
+const ventaComputadoras = require ('./tp')
+
+const vendedoras = ventaComputadoras.vendedoras;
+const ventas = ventaComputadoras.ventas;
+const precios = ventaComputadoras.precios
+const sucursales = ventaComputadoras.sucursales;
+const precioMaquina = ventaComputadoras.precioMaquina;
+const cantidadVentasComponente = ventaComputadoras.cantidadVentasComponente;
+const componenteMasVendido = ventaComputadoras.componenteMasVendido;
+const ventasSucursal = ventaComputadoras.ventasSucursal;
+const ventaPromedio= ventaComputadoras.ventaPromedio;
+const obtenerIdVenta = ventaComputadoras.obtenerIdVenta;
+const agregarVenta = ventaComputadoras.agregarVenta;
+
+//1
 test ('suma los precios de cada componente', ()=>{
-    precios()
-    const total =
-    expect(total).toBe(total)
+    expect(precioMaquina(['HDD Toyiva' , 'RAM Quinston'])).toBe(200);
 })
 
-test ('devuelve la cantidad ', ()=>{
-
+//2
+test('debe devolver cantidad de ventas que se vendio un componente', ()=>{    
+    expect(cantidadVentasComponente('Monitor GPRS 3000')).toBe(3)
+    expect(cantidadVentasComponente('Motherboard ASUS 1500')).toBe(2)
+    expect(cantidadVentasComponente('Monitor ASC 543')).toBe(3)
+    expect(cantidadVentasComponente('Motherboard ASUS 1200')).toBe(3)
+    expect(cantidadVentasComponente('Motherboard MZI')).toBe(1)
+    expect(cantidadVentasComponente('HDD Toyiva')).toBe(1)
+    expect(cantidadVentasComponente('HDD Wezter Dishital')).toBe(0)
+    expect(cantidadVentasComponente('RAM Quinston')).toBe(1)
+    expect(cantidadVentasComponente('RAM Quinston Fury')).toBe(0)
 })
 
-test ('', ()=>{
-
+//3
+test('debe devolver el importe total de ventas de cada vendedora', ()=>{
+    expect(ventasVendedora('Grace')).toBe(1040)
+    expect(ventasVendedora('Ada')).toBe(670)
+    expect(ventasVendedora('Hedy')).toBe(460)
 })
 
+//4
+test ('debe devolver el componente mas vendido historicamente', ()=>{
+    expect(componenteMasVendido()).toBe('Monitor GPRS 3000')
+})
 
+//5
+test ('debe devolver el importe total de ventas de una sucursal', ()=>{
+    expect(ventasSucursal('Centro')).toBe(990)
+    expect(ventasSucursal('Caballito')).toBe(1130)
+})
 
-const shopping = require('./productos');
-
-const productos = shopping.productos;
-const carrito = shopping.carrito;
-
-
-    modificar: function(id, dataProducto) {
-        for(let producto of this.lista) {
-            if(producto.id == id){
-                // ["titulo", "precio"]
-                let misKeys = Object.keys(dataProducto);
-                for(let key of misKeys) {
-                    producto[key] = dataProducto[key];
-                }
-            }
-        }
-    },
-    borrar: function (id) {
-        const index = this.lista.findIndex(producto => {
-            return producto.id == id;
-        });
-        if(index == -1) {
-            throw "Error: El id buscado no existe";
-        }
-        this.lista.splice(index, 1);
-    }
-};
-
-const carrito = {
-    lista: [],
-    agregar: function(id, cantidad) {
-        const producto = productos.lista.find((producto)=>{
-            return producto.id == id;
-        });
-        producto.cantidad = cantidad;
-        this.lista.push(producto);
-    },
-    borrar: function(id) {
-        let index = this.lista.findIndex((producto) => {
-            return producto.id == id;
-        });
-        if (index == -1) {
-            throw "Error: Producto no existe en carrito";
-        }
-        this.lista.splice(index, 1);
-    },
-    sumarPrecio: function() {
-        let total = 0;
-        for(let producto of this.lista) {
-            total += parseFloat(producto.precio * producto.cantidad);
-        }
-        return total;
-    }
-};
-
-module.exports = {
-    productos,
-    carrito
-};
-
-
-
-
-
-beforeEach(()=>{
-    productos.lista = [];
-    carrito.lista = [];
+//6
+test('Sabemos que la mejor vendedora fue Grace', () => {
+    expect(mejorVendedora()).toBe("Grace")
 });
 
-test("Agregar producto a lista de productos", () =>{
-    productos.agregar(1, "mi titulo", "mi descripcion", 12.33);
-    expect(productos.lista[0]).toStrictEqual({
-        id: 1,
-        titulo: "mi titulo",
-        descripcion: "mi descripcion",
-        precio: 12.33
-    })
+//7
+test('debe devolver un promedio de todas las ventas', ()=>{
+    expect(ventaPromedio()).toBe(353)
 });
 
-test("Modificar producto en lista", () =>{
-    productos.agregar(1, "mi titulo", "mi descripcion", 12.33);
-    productos.modificar(1, { titulo: "mi nuevo titulo", precio: 33.12 });
-    expect(productos.lista[0]).toStrictEqual({
-        id: 1,
-        titulo: "mi nuevo titulo",
-        descripcion: "mi descripcion",
-        precio: 33.12
-    });
+//8
+test('devuelva un numero random', ()=>{
+    expect(typeof obtenerIdVenta()).toBe('number');
 });
 
-test("Borra producto de lista por id", () =>{
-    productos.agregar(1, "mi titulo", "mi descripcion", 12.33);
-    expect(productos.lista.length).toBe(1);
-    productos.borrar(1);
-    expect(productos.lista.length).toBe(0);
+//9
+test ('agregar venta', ()=>{
+    let newVenta = agregarVenta(10, 4, 2019, 'Ada', 'Centro', ['Monitor ASC 543', 'Motherboard ASUS 1200'])
+    expect(newVenta).toStrictEqual(ventas);
 });
 
-test("Tira error cuando no existe id para borrar", () =>{
-    expect(() => {
-        productos.borrar(1);
-    }).toThrow("Error: El id buscado no existe");
-});
-
-
-////////////////////////////////////////////////////////////////
-test("Agrego producto al carrito", () =>{
-    productos.agregar(1, "titulo", "desc", 12.33);
-    carrito.agregar(1, 3);
-    expect(carrito.lista[0]).toStrictEqual({
-        id: 1,
-        titulo: "titulo",
-        descripcion: "desc",
-        precio: 12.33,
-        cantidad: 3
-    });
-});
-
-test("Borro producto del carrito", () =>{
-    productos.agregar(1, "titulo", "desc", 12.33);
-    carrito.agregar(1, 3);
-    expect(carrito.lista.length).toBe(1);
-    carrito.borrar(1);
-    expect(carrito.lista.length).toBe(0);
-});
-
-test("Tira error cuando producto no existe en carrito", () =>{
-    expect(() => {
-        carrito.borrar(1);
-    }).toThrow("Error: Producto no existe en carrito");
-});
-
-test("Suma los precios de los productos", () => {
-    productos.agregar(1, "titulo", "desc", 10.50);   //productos = funcion, agregar= metodo, accion 
-    productos.agregar(2, "titulo", "desc", 20.50);
-    productos.agregar(3, "titulo", "desc", 30.00);
-    productos.agregar(4, "titulo", "desc", 40.00);
-    carrito.agregar(1, 2);
-    carrito.agregar(2, 2);
-    carrito.agregar(3, 1);
-    carrito.agregar(4, 1);
-    const total = carrito.sumarPrecio();
-    expect(total).toBe(132.00);
-});

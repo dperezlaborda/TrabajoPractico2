@@ -1,41 +1,27 @@
-module.exports{
+const vendedoras = ["Ada", "Grace", "Hedy", "Sheryl"];
 
-};
-
-const vendedores = [
-    "Ana",
-    "Emilia",
-    "Juan",
-    "Lucas",
-    "Sofia"
+const ventas = [
+    [ 100000000, 4, 2, 2019, 'Grace', 'Centro', ['Monitor GPRS 3000', 'Motherboard ASUS 1500'] ],
+    [ 100000001, 1, 1, 2019, 'Ada', 'Centro', ['Monitor GPRS 3000', 'Motherboard ASUS 1500'] ],
+    [ 100000002, 2, 1, 2019, 'Grace', 'Caballito', ['Monitor ASC 543', 'Motherboard MZI', 'HDD Toyiva'] ],
+    [ 100000003, 10, 1, 2019, 'Ada', 'Centro', ['Monitor ASC 543', 'Motherboard ASUS 1200'] ],
+    [ 100000004, 12, 1, 2019, 'Grace', 'Caballito', ['Monitor GPRS 3000', 'Motherboard ASUS 1200'] ],
+    [ 100000005, 21, 3, 2019, 'Hedy', 'Caballito', ['Monitor ASC 543', 'Motherboard ASUS 1200', 'RAM Quinston'] ]
 ];
 
-const ventas =[                                                                     
-    [145, 2, 1, 2019, "Ana", "Recoleta", ["Audi A8","Aro de llanta de aluminio"]],
-    [144, 3, 1, 2019 , "Sofia", "Microcentro", ["BMW X4", "Llanta de magnesio"]],
-    [143, 16, 4, 2019, "Lucas", "Flores", ["Chevrolet Corvette", "Modulo Alarma Chevrolet Sonic"]],
-    [345,25, 6, 2019, "Juan", "Flores", ["Parabrisas Chevrolet Agile", "Engranaje Libre Marcha Atras Caja Chevrolet"]],
-    [305, 12, 5, 2019, "Lucas", "Recoleta", ["Modulo Alarma Chevrolet Sonic", "Caja De Velocidad P/chevrolet C10/400/chevy5ta "]],
-    [346, 21, 12, 2019, "Emilia", "Flores", ["Modulo Alarma Chevrolet Sonic", "Emisor Combustible Bomba Combustible Volkswagen","Velocímetro Universal Cuenta Km"]]
+const precios = [
+    [ 'Monitor GPRS 3000', 200 ],
+    [ 'Motherboard ASUS 1500', 120 ],
+    [ 'Monitor ASC 543', 250 ],
+    [ 'Motherboard ASUS 1200', 100 ],
+    [ 'Motherboard MZI', 30 ],
+    [ 'HDD Toyiva', 90 ],
+    [ 'HDD Wezter Dishital', 75 ],
+    [ 'RAM Quinston', 110 ],
+    [ 'RAM Quinston Fury', 230 ]
 ];
 
-const precios =[
-    ["Audi A8", 67900],
-    ["BMW X4", 50000],
-    ["Chevrolet Corvette", 90000],
-    ["Aro de llanta de aluminio", 2999],
-    ["Llanta de magnesio", 10800],
-    ["Modulo Alarma Chevrolet Sonic", 3000 ],
-    ["Parabrisas Chevrolet Agile", 12000 ],
-    ["Engranaje Libre Marcha Atras Caja Chevrolet", 250000 ],
-    ["Caja De Velocidad P/chevrolet C10/400/chevy5ta ", 9000 ],
-    ["Emisor Combustible Bomba Combustible Volkswagen", 2500 ],
-    ["Velocímetro Universal Cuenta Km ", 3000],
-];
-
-const sucursales=[
-    "Microcentro", "Flores", "Recoleta"
-];
+const sucursales = ['Centro', 'Caballito'];
 
 /*
  * 1. precioMaquina(componentes): recibe un array de componentes 
@@ -43,18 +29,12 @@ const sucursales=[
  * componentes, que es la suma de los precios de cada componente incluido.
  */ 
 
-const suma=()=>{
-
-} 
-
-const precioAuto=(precios)=>{
-    let total = 0;
-    for (let i=0; i<precios.length ;i++){
-        total += (precios[i][1])                                                // como accedo a una array dentro de otro array y como sumo.
-    }
+const precioMaquina = (componentes) => {
+    let precioComponentes = componentes.map((componente)=> precios.find((precio) => precio [0] == componente));  
+    return precioComponentes.filter((elem) => elem != undefined).map(elem => elem[1]).reduce((acumulador, elem) => acumulador+elem, 0)
 }
 
-console.log(precioAuto(["", ""]))
+console.log(precioMaquina(["Monitor ASC 543", "Motherboard ASUS 1200"]))
 
 /*
  * 2. cantidadVentasComponente(componente): recibe el nombre de un componente 
@@ -62,11 +42,16 @@ console.log(precioAuto(["", ""]))
  * por parámetro, se asume que está identificada por la variable ventas.
  */
 
-const cantidadVentasComponente=(ventas)=>{
-    ventas.reduce((repetidos, nombreComponente)=>{                                        //.reduce is not a function 
-        repetidos[nombreComponente] = (repetidos[nombreComponente] || 0) + 1;                   
+const cantidadVentasComponente = (componente) => {
+    let contador = 0;
+    ventas.forEach( venta => {
+       for (let comp of venta[6]){              
+            if ( comp == componente){
+                contador++;
+            }
+       }     
     });
-    return repetidos;
+    return contador;
 }
 
 console.log(cantidadVentasComponente(""));
@@ -74,32 +59,98 @@ console.log(cantidadVentasComponente(""));
 /**
  * 3.recibe por parámetro el nombre de una vendedora y retorna el importe total 
  * de ventas realizadas por dicha vendedora.
- */
+*/
 
-const ventasVendedor=(ventas)=>{
-    
-}
+const ventasVendedora = (nombre) => {
+    let importeTotal = 0;
+    for (let i = 0; i < ventas.length; i++){
+        if(ventas[i][4] == nombre){
+        for (let x = 0; x < ventas.length; x++)
+        for (let y = 0; y < precios.length; y++){
+            if (precios[y][0] == ventas[i][6][x]){
+                importeTotal += precios[y][1]
+            }
+        }
+    }};
+    return importeTotal;
+};
 
-console.log(ventasVendedor("Lucas"));
+console.log(ventasVendedora("Ada")); 
 
 /**
  * 4. Devuelve el nombre del componente que más ventas tuvo históricamente. 
  * El dato de la cantidad de ventas es el que indica la función cantidadVentasComponente
- */
+*/
 
 const componenteMasVendido=()=>{
-    
+    const componentesVendidos = precios.map( elem => {
+        let nombreDelComponente = elem[0]
+            return cantidadVentasComponente(nombreDelComponente)
+        });
+    let acc = [0,0]    
+    for(let i = 0;  i < componentesVendidos.length; i++){
+        if( acc[0] > componentesVendidos[i] ){
+            acc = [componentesVendidos[i],i]
+        }
+    }    
+    let indiceDeMax = acc[1]
+    return precios[indiceDeMax][0];
 }
+
+console.log(componenteMasVendido());
 
 /**
  * 5.Recibe por parámetro el nombre de una sucursal y retorna el importe de las ventas 
  * totales realizadas por una sucursal sin límite de fecha.
- */
+*/
 
+const ventasSucursal = (sucursal)=>{
+    const filtrarPorSucursal = ventas.filter(elem =>{    //elem: es una venta del array de todas las ventas
+        elem[5] == sucursal
+    });
+    let listaTotal = filtrarPorSucursal.map(elem=>{
+        precioMaquina(elem[6]);
+    });
+    return listaTotal.reduce((acumulador, elem) =>{
+        acumulador + elem
+    },0);
+}
+
+console.log(ventasSucursal(""));
+
+/*
+const ventasSucursal = (sucursal) => {
+    let importeTotal = 0;
+    for (let i = 0; i < ventas.length; i++){
+        if(ventas[i][5] == sucursal){
+        for (let x = 0; x < ventas.length; x++)
+        for (let y = 0; y < precios.length; y++){
+            if (precios[y][0] == ventas[i][6][x]){
+                importeTotal += precios[y][1]
+            }
+        }
+    }}
+    console.log(importeTotal)
+*/
 
 /**
  * 6.Devuelve el nombre de la vendedora que más ingresos generó
- */
+*/
+
+const mejorVendedora=()=>{
+    let contador = 0;
+    let mejorVendedora = "";
+    for (let vendedora of vendedoras) {
+        let ingresosGenerados = ventasVendedora(vendedora)
+        if (ingresosGenerados > contador) {
+            mejorVendedora = vendedora;
+            contador = ingresosGenerados;
+        }
+    }
+    return mejorVendedora;
+};
+ 
+console.log(mejorVendedora())
 
 /**
  * 7.Debe retornar el importe promedio por venta, 
@@ -107,13 +158,52 @@ const componenteMasVendido=()=>{
  * (Hacer un promedio de todas las ventas) 
  */
 
+const ventaPromedio=()=>{
+    let suma = 0;
+    for (let i = 0;  i < ventas.length; i++){
+        suma = suma + precioMaquina(ventas[i][6]);
+    }
+    return Math.floor(suma / ventas.length)
+}
+
+console.log(ventaPromedio());
+
 /**
- * 8.Tiene que retornar un número aleatorio entre 100000000 y 999999999
+ * 8.Tiene que retornar un número aleatorio entre 100.000.000 y 999.999.999
  */
 
+const obtenerIdVenta = () => {
+    let id=Math.floor(Math.random() * ( 999999999 - 100000000)) + 100000000;  // Math.floor redondea siempre para abajo, no importa si es 5 o 1( max - min ) + min;
+    return id;   
+}
 /**
  * 9.recibe por parámetro todos los datos de una venta, y los agrega en el array de ventas. 
  * Al igual que las ventas que ya están previamente creadas, además de estos datos 
  * necesitamos agregar el primer dato que es un identificador de la venta.
  * Para agregar este dato, tenemos que usar la función desarrollada en el punto anterior obtenerIdVenta.
  */
+
+const agregarVenta = (dia, mes, anio, vendedora, sucursal, componentes) => {
+   
+    if(typeof dia != "number"){   
+            throw "No es un mumero";
+    }
+        
+    ventas.push([obtenerIdVenta(), dia, mes, anio, vendedora, sucursal, componentes]);
+    
+    return ventas;
+}
+
+module.exports ={
+    vendedoras,
+    ventas, 
+    precios,
+    sucursales,
+    precioMaquina,
+    cantidadVentasComponente,
+    componenteMasVendido,
+    ventasSucursal,
+    ventaPromedio,
+    obtenerIdVenta,
+    agregarVenta
+}

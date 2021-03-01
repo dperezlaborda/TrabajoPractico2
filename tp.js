@@ -30,10 +30,20 @@ const sucursales = ['Centro', 'Caballito'];
  */ 
 
 const precioMaquina = (componentes) => {
-    let precioComponentes = componentes.map((componente)=> precios.find((precio) => precio [0] == componente));  
+    // precio [0] deberia no tener espacio entre el corchete y la variable
+    let precioComponentes = componentes.map((componente)=> precios.find((precio) => precio [0] == componente));
+    // ¿Por qué filtramos por "undefined" acá? No debería nunca traernos undefined.
+    // No es necesario y trae confusion en la lectura del código. 
+    // También estaría bueno poner cada función en una linea aparte para mejorar legibilidad
+    /**
+     * precioComponentes.filter(..)
+     *  .map(...)
+     * .reduce()
+     */
     return precioComponentes.filter((elem) => elem != undefined).map(elem => elem[1]).reduce((acumulador, elem) => acumulador+elem, 0)
 }
 
+// Borrar console.log
 console.log(precioMaquina(["Monitor ASC 543", "Motherboard ASUS 1200"]))
 
 /*
@@ -54,6 +64,7 @@ const cantidadVentasComponente = (componente) => {
     return contador;
 }
 
+// borrar
 console.log(cantidadVentasComponente(""));
 
 /**
@@ -65,6 +76,9 @@ const ventasVendedora = (nombre) => {
     let importeTotal = 0;
     for (let i = 0; i < ventas.length; i++){
         if(ventas[i][4] == nombre){
+        // Faltan llaves en el primer for y reduce legibilidad del código
+        // debería ser ventas[i][6].length para que el primer for tenga sentido
+        // porque estoy loopeando por cada componente de una venta, no por cada venta.
         for (let x = 0; x < ventas.length; x++)
         for (let y = 0; y < precios.length; y++){
             if (precios[y][0] == ventas[i][6][x]){
@@ -75,6 +89,7 @@ const ventasVendedora = (nombre) => {
     return importeTotal;
 };
 
+//borrar
 console.log(ventasVendedora("Ada")); 
 
 /**
@@ -87,6 +102,11 @@ const componenteMasVendido=()=>{
         let nombreDelComponente = elem[0]
             return cantidadVentasComponente(nombreDelComponente);
         });
+    // A partir de esta linea el código es dificil de comprender
+    // Lo que yo más les quise transmitir es hacer código legible
+    // Es preferible tener 16 variables entendibles que un array sin referencias
+    // En este caso acc, yo entiendo lo que hace, pero la pregunta al costado dice
+    // claramente que no es comprensible facilmente.
     let acc = [0,0]                                                           //que es acc¿??
     for(let i = 0;  i < componentesVendidos.length; i++){
         if( acc[0] > componentesVendidos[i] ){
@@ -95,8 +115,17 @@ const componenteMasVendido=()=>{
     }    
     let indiceDeMax = acc[1]
     return precios[indiceDeMax][0];
+    /**
+     * La complejidad con la que está hecho esto podría reducirse facilmente 
+     * simplemente loopeando una vez por el array de precios.
+     * Por cada precio me fijo si el componente fue más vendido que los anteriores y guardo nombre del 
+     * componente y su precio. Sin usar indices y arrays complicados.
+     * De todas formas funciona y eso está bien. Pero la idea es hacerle fácil al programador
+     * que venga la lectura de nuestro código.
+     */
 }
 
+//borrar
 console.log(componenteMasVendido());
 
 /**
@@ -108,6 +137,7 @@ const ventasSucursal = (sucursal) => {
     let importeTotal = 0;
     for (let i = 0; i < ventas.length; i++){
         if(ventas[i][5] == sucursal){
+            // Idem for sin llaves y ventas[i][6].length
             for (let x = 0; x < ventas.length; x++)
             for (let y = 0; y < precios.length; y++){
                 if (precios[y][0] == ventas[i][6][x]){
@@ -119,6 +149,7 @@ const ventasSucursal = (sucursal) => {
     return importeTotal;
 };
 
+// borrar
 console.log(ventasSucursal("Centro"))
 
 /**
@@ -137,7 +168,8 @@ const mejorVendedora=()=>{
     }
     return mejorVendedora;
 };
- 
+
+// borrar
 console.log(mejorVendedora())
 
 /**
@@ -154,6 +186,7 @@ const ventaPromedio=()=>{
     return Math.floor(suma / ventas.length)
 }
 
+// borrar
 console.log(ventaPromedio());
 
 /**
@@ -172,7 +205,7 @@ const obtenerIdVenta = () => {
  */
 
 const agregarVenta = (dia, mes, anio, vendedora, sucursal, componentes) => {
-    if(typeof dia != "number"){   
+    if(typeof dia != "number"){   // Falta validar mes y anio.
         throw "No es un mumero";
     }     
     ventas.push([obtenerIdVenta(), dia, mes, anio, vendedora, sucursal, componentes]);

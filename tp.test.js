@@ -1,8 +1,11 @@
 const ventaComputadoras = require ('./tp')
 
+//Borrar vendedoras porque no se usa
 const vendedoras = ventaComputadoras.vendedoras;
 const ventas = ventaComputadoras.ventas;
+//Borrar precios porque no se usa
 const precios = ventaComputadoras.precios
+///Borrar sucursales porque no se usa
 const sucursales = ventaComputadoras.sucursales;
 const precioMaquina = ventaComputadoras.precioMaquina;
 const cantidadVentasComponente = ventaComputadoras.cantidadVentasComponente;
